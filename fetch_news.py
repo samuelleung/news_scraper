@@ -6,6 +6,19 @@ import requests
 import feedparser
 from oauth2client.service_account import ServiceAccountCredentials
 
+# Load credentials from GitHub Secrets
+encoded_creds = os.getenv("GOOGLE_SHEETS_CREDENTIALS")
+
+if encoded_creds:
+    creds_json = json.loads(base64.b64decode(encoded_creds).decode("utf-8"))
+    with open("google_sheets_credentials.json", "w") as f:
+        json.dump(creds_json, f)
+
+# Authenticate with Google Sheets API
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+creds = ServiceAccountCredentials.from_json_keyfile_name("google_sheets_credentials.json", scope)
+client = gspread.authorize(creds)
+
 # Google Sheets 設定
 SHEET_NAME = "Translated_News"
 GOOGLE_SHEETS_CREDENTIALS_FILE = "google_sheets_credentials.json"
