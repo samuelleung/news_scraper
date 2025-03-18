@@ -1,0 +1,24 @@
+name: Fetch News Every 4 Hours
+
+on:
+  schedule:
+    - cron: "0 */4 * * *"  # Runs every 4 hours
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  fetch_news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: pip install gspread oauth2client feedparser requests
+
+      - name: Run News Fetcher
+        run: python fetch_news.py
