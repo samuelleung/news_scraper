@@ -1,21 +1,37 @@
 import os
-import gspread
-import base64
 import json
+import base64
+import gspread
 import requests
 import feedparser
-from datetime import datetime
 from oauth2client.service_account import ServiceAccountCredentials
 
 # Google Sheets 設定
 SHEET_NAME = "Translated_News"
-GOOGLE_SHEETS_CREDENTIALS = "google_sheets_credentials.json"
+GOOGLE_SHEETS_CREDENTIALS_FILE = "google_sheets_credentials.json"
 
 # RSS Feeds
 RSS_FEEDS = {
     "GB News": "https://www.gbnews.com/feeds/news.rss",
     "Manchester Evening News": "https://www.manchestereveningnews.co.uk/news/?service=rss"
 }
+
+def load_google_sheets_client():
+    """ 加載 Google Sheets API 客戶端 """
+    print("📡 Connecting to Google Sheets...")
+    
+    if os.getenv("GITHUB_ACTIONS"):  # Detect if running in GitHub Actions
+        encoded_creds = os.getenv("GOOGLE_SHEETS_CREDENTIALS")
+        if encoded_creds:
+            creds_json = json.loads(base64.b64decode(encoded_creds).decode("utf-8"))
+            with open(GOOGLE_SHEETS_CREDENTIALS_FILE, "w") as f:
+                json.dump(creds_json, f)
+    
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    creds = ServiceAccountCredentials.from_json_keyfile_name(GOOGLE_SHEETS_CREDENTIALS_FILE, scope)
+    client = gspread.authorize(creds)
+    print("✅ Connected successfully!")
+    return client
 
 def fetch_news_from_feeds():
     """從 RSS Feeds 獲取新聞"""
@@ -37,15 +53,6 @@ def fetch_news_from_feeds():
             }
             news_articles.append(news_entry)
     return news_articles
-
-def load_google_sheets_client():
-    """ 加載 Google Sheets API 客戶端 """
-    print("📡 Connecting to Google Sheets...")
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name(GOOGLE_SHEETS_CREDENTIALS, scope)
-    client = gspread.authorize(creds)
-    print("✅ Connected successfully!")
-    return client
 
 def save_news_to_google_sheets(news_articles):
     """將新聞寫入 Google Sheets，避免重複儲存"""

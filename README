@@ -1,0 +1,69 @@
+# 📰 News Scraper - Python Environment Setup
+
+## **🔧 Setting Up the Python Environment**
+Follow these steps to set up your Python environment for the news scraper.
+
+---
+
+## **1️⃣ Install Python 3.10**
+Ensure you have **Python 3.10+** installed. Verify with:
+```bash
+python --version
+```
+Expected output:
+```
+Python 3.10.12
+```
+If needed, install using **pyenv**:
+```bash
+pyenv install 3.10.12
+pyenv global 3.10.12
+```
+
+---
+
+## **2️⃣ Create a Virtual Environment**
+```bash
+python3 -m venv venv
+```
+
+---
+
+## **3️⃣ Activate the Virtual Environment**
+- **macOS/Linux**:
+  ```bash
+  source venv/bin/activate
+  ```
+- **Windows (PowerShell)**:
+  ```powershell
+  venv\Scripts\Activate
+  ```
+
+Your terminal should now show `(venv)` before the command prompt.
+
+---
+
+## **4️⃣ Install Dependencies**
+```bash
+pip install --upgrade pip
+pip install gspread oauth2client feedparser requests
+```
+
+Verify installation:
+```bash
+python -c "import gspread; print('✅ gspread is installed!')"
+```
+Expected output:
+```
+✅ gspread is installed!
+```
+
+---
+
+## **5️⃣ Run the Script**
+```bash
+python fetch_news.py
+```
+
+🎉 **You're all set!** If you encounter any issues, check your Python version and virtual environment. 🚀
+
