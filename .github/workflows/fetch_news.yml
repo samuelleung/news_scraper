@@ -20,5 +20,10 @@ jobs:
       - name: Install Dependencies
         run: pip install gspread oauth2client feedparser requests
 
+      - name: Decode Google Sheets Credentials
+        run: echo "$GOOGLE_SHEETS_CREDENTIALS" | base64 --decode > google_sheets_credentials.json
+        env:
+          GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
+          
       - name: Run News Fetcher
         run: python fetch_news.py
