@@ -1,8 +1,8 @@
-name: Fetch News Every 4 Hours
+name: Fetch News Every Hours
 
 on:
   schedule:
-    - cron: "0 */1 * * *"  # Runs every 4 hours
+    - cron: "0 */1 * * *"  # Runs every hours
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
